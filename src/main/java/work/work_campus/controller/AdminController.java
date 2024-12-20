@@ -25,6 +25,7 @@ public class AdminController {
     @PostMapping("/login")
     public String login(@ModelAttribute AdminLoginRequest request, HttpSession session) {
         try {
+            System.out.println("request = " + request.getAdminLoginId());
             AdminResponse response = adminService.login(request);
             session.setAttribute("admin", response);
             return "redirect:/admin/dashboard";
@@ -33,14 +34,20 @@ public class AdminController {
         }
     }
 
-//    @GetMapping("/dashboard")
-//    public String dashboard(Model model, HttpSession session) {
-//        AdminResponse admin = (AdminResponse) session.getAttribute("admin");
-//        if (admin == null) {
-//            return "redirect:/admin/login";
-//        }
-//
-//        model.addAttribute("workRecords", adminService.getPendingWorkRecords(admin.getId()));
-//        return "admin/dashboard";
-//    }
+    @PostMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/";
+    }
+
+    @GetMapping("/dashboard")
+    public String dashboard(Model model, HttpSession session) {
+        AdminResponse admin = (AdminResponse) session.getAttribute("admin");
+        if (admin == null) {
+            return "redirect:/admin/login";
+        }
+
+        model.addAttribute("workRecords", adminService.getPendingWorkRecords(admin.getId()));
+        return "admin/dashboard";
+    }
 }
