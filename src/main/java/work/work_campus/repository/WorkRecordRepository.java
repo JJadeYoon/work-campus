@@ -14,5 +14,7 @@ public interface WorkRecordRepository extends JpaRepository<WorkRecord, Long> {
 
     List<WorkRecord> findByStudentIdAndWorkStartBetweenOrderByWorkStartDesc(Long studentId, LocalDateTime startOfMonth, LocalDateTime endOfMonth);
 
+    List<WorkRecord> findByStudentIdAndWorkStartBetween(Long studentId, LocalDateTime startOfMonth, LocalDateTime endOfMonth);
+
 //    List<WorkRecord> findByStudentDepartmentAdminIdAndIsApprovedIsFalseOrderByWorkStartDesc(Long adminId);
 }
