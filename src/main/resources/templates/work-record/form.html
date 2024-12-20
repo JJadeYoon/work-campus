@@ -1,0 +1,84 @@
+<!-- templates/work-record/form.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>근무 시간 입력</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h2>근무 시간 입력</h2>
+        </div>
+    </div>
+
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <form th:action="@{/work-records}" method="post">
+                        <div class="mb-3">
+                            <label for="workStart" class="form-label">시작 시간</label>
+                            <input type="datetime-local" class="form-control"
+                                   id="workStart" name="workStart" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="workEnd" class="form-label">종료 시간</label>
+                            <input type="datetime-local" class="form-control"
+                                   id="workEnd" name="workEnd" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="workDescription" class="form-label">업무 내용</label>
+                            <textarea class="form-control" id="workDescription"
+                                      name="workDescription" rows="3"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">근무 시간 등록</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    이번 달 근무 기록
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>날짜</th>
+                            <th>시작 시간</th>
+                            <th>종료 시간</th>
+                            <th>근무 시간</th>
+                            <th>승인 상태</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="record : ${workRecords}">
+                            <td th:text="${#temporals.format(record.workStart, 'MM/dd')}"></td>
+                            <td th:text="${#temporals.format(record.workStart, 'HH:mm')}"></td>
+                            <td th:text="${#temporals.format(record.workEnd, 'HH:mm')}"></td>
+                            <td th:text="${record.workMinutes + '분'}"></td>
+                            <td>
+                                <span th:if="${record.isApproved}" class="badge bg-success">승인됨</span>
+                                <span th:unless="${record.isApproved}" class="badge bg-warning">대기중</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
