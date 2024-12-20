@@ -46,6 +46,7 @@ public class AdminController {
 
     @GetMapping("/dashboard")
     public String dashboard(Model model, HttpSession session) {
+        System.out.println("model = " + model + ", session = " + session);
         AdminResponse admin = (AdminResponse) session.getAttribute("admin");
         if (admin == null) {
             return "redirect:/admin/login";
