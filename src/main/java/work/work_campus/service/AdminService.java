@@ -27,7 +27,6 @@ public class AdminService {
     public AdminResponse login(AdminLoginRequest request) {
         Admin admin = adminRepository.findByAdminLoginId(request.getAdminLoginId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 관리자입니다."));
-        System.out.println("admin = " + admin);
 
         if (!admin.getPassword().equals(request.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");

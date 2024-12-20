@@ -8,10 +8,12 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import work.work_campus.domain.Department;
 import work.work_campus.domain.Student;
 import work.work_campus.domain.WorkRecord;
 import work.work_campus.dto.request.WorkRecordCreateRequest;
 import work.work_campus.dto.response.WorkRecordResponse;
+import work.work_campus.repository.DepartmentRepository;
 import work.work_campus.repository.StudentRepository;
 import work.work_campus.repository.WorkRecordRepository;
 
@@ -22,11 +24,14 @@ public class WorkRecordService {
 
     private final WorkRecordRepository workRecordRepository;
     private final StudentRepository studentRepository;
+    private final DepartmentRepository departmentRepository;
 
     @Transactional
     public void createWorkRecord(WorkRecordCreateRequest request, Long studentId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalArgumentException("학생을 찾을 수 없습니다."));
+
+        Department department = student.getDepartment();
 
         // 시작 시간과 종료 시간 파싱
         LocalDateTime startTime = LocalDateTime.parse(request.getWorkStart());
@@ -40,6 +45,7 @@ public class WorkRecordService {
 
         WorkRecord workRecord = WorkRecord.builder()
                 .student(student)
+                .approvedBy(department.getAdmin())
                 .workStart(startTime)
                 .workEnd(endTime)
                 .workMinutes((int) workMinutes)
