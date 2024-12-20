@@ -108,4 +108,22 @@ public class AdminController {
         }
         return "redirect:/admin/departments";
     }
+
+    @PostMapping("/approve-work")
+    public String approveWorkRecord(@RequestParam Long recordId,
+                                    HttpSession session,
+                                    RedirectAttributes redirectAttributes) {
+        try {
+            AdminResponse admin = (AdminResponse) session.getAttribute("admin");
+            if (admin == null) {
+                return "redirect:/admin/login";
+            }
+
+            adminService.approveWorkRecord(recordId, admin.getId());
+            redirectAttributes.addFlashAttribute("message", "근무 기록이 승인되었습니다.");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/admin/dashboard";
+    }
 }

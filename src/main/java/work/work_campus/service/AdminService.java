@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import work.work_campus.domain.Admin;
 import work.work_campus.domain.Department;
+import work.work_campus.domain.WorkRecord;
 import work.work_campus.dto.request.AdminLoginRequest;
 import work.work_campus.dto.request.DepartmentCreateRequest;
 import work.work_campus.dto.response.AdminResponse;
@@ -72,4 +73,36 @@ public class AdminService {
 
         departmentRepository.delete(department);
     }
+
+
+    @Transactional
+    public void approveWorkRecord(Long recordId, Long adminId) {
+        WorkRecord workRecord = workRecordRepository.findById(recordId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 근무 기록입니다."));
+
+        Admin admin = adminRepository.findById(adminId)
+                .orElseThrow(() -> new IllegalArgumentException("관리자 정보를 찾을 수 없습니다."));
+
+        // 이미 승인된 기록인지 확인
+        if (workRecord.getIsApproved()) {
+            throw new IllegalArgumentException("이미 승인된 근무 기록입니다.");
+        }
+
+        // 해당 부서의 관리자인지 확인
+        if (!workRecord.getStudent().getDepartment().getAdmin().getId().equals(adminId)) {
+            throw new IllegalArgumentException("해당 부서의 관리자만 승인할 수 있습니다.");
+        }
+
+        // 승인 처리
+        workRecord.approve(admin);
+        workRecordRepository.save(workRecord);
+    }
+
+//    // 대시보드에 표시할 승인 대기 중인 근무 기록 조회
+//    public List<WorkRecordResponse> getPendingWorkRecords(Long adminId) {
+//        return workRecordRepository.findByStudentDepartmentAdminIdAndIsApprovedIsFalseOrderByWorkStartDesc(adminId)
+//                .stream()
+//                .map(WorkRecordResponse::from)
+//                .collect(Collectors.toList());
+//    }
 }

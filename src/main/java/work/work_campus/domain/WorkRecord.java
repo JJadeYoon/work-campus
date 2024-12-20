@@ -45,4 +45,9 @@ public class WorkRecord extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "approved_by")
     private Admin approvedBy;
+
+    public void approve(Admin admin) {
+        this.approvedBy = admin;
+        this.isApproved = true;
+    }
 }
