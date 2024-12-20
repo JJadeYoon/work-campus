@@ -6,10 +6,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import work.work_campus.domain.Admin;
+import work.work_campus.domain.Department;
 import work.work_campus.dto.request.AdminLoginRequest;
+import work.work_campus.dto.request.DepartmentCreateRequest;
 import work.work_campus.dto.response.AdminResponse;
+import work.work_campus.dto.response.DepartmentResponse;
 import work.work_campus.dto.response.WorkRecordResponse;
 import work.work_campus.repository.AdminRepository;
+import work.work_campus.repository.DepartmentRepository;
 import work.work_campus.repository.WorkRecordRepository;
 
 @Service
@@ -18,6 +22,7 @@ import work.work_campus.repository.WorkRecordRepository;
 public class AdminService {
     private final AdminRepository adminRepository;
     private final WorkRecordRepository workRecordRepository;
+    private final DepartmentRepository departmentRepository;
 
     public AdminResponse login(AdminLoginRequest request) {
         Admin admin = adminRepository.findByAdminLoginId(request.getAdminLoginId())
@@ -34,6 +39,26 @@ public class AdminService {
     public List<WorkRecordResponse> getPendingWorkRecords(Long adminId) {
         return workRecordRepository.findByApprovedByIdAndIsApprovedIsFalse(adminId).stream()
                 .map(WorkRecordResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void createDepartment(DepartmentCreateRequest request, Long adminId) {
+        Admin admin = adminRepository.findById(adminId)
+                .orElseThrow(() -> new IllegalArgumentException("관리자를 찾을 수 없습니다."));
+
+        Department department = Department.builder()
+                .departmentName(request.getDepartmentName())
+                .location(request.getLocation())
+                .admin(admin)
+                .build();
+
+        departmentRepository.save(department);
+    }
+
+    public List<DepartmentResponse> getAllDepartments() {
+        return departmentRepository.findAll().stream()
+                .map(DepartmentResponse::from)
                 .collect(Collectors.toList());
     }
 }
