@@ -10,6 +10,6 @@ public class StudentSignUpRequest {
     private String password;
     private String name;
     private String email;
-    private Integer monthClyTargetHours;
+    private Integer monthlyTargetHours;
     private Long departmentId;     // 소속 부서 ID
 }
