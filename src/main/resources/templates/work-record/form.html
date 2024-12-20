@@ -1,4 +1,3 @@
-<!-- templates/work-record/form.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -8,6 +7,34 @@
 </head>
 <body>
 <div class="container mt-4">
+    <!-- 네비게이션 바 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">학생 대시보드</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/student/dashboard}">대시보드</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/work-records}">근무시간 입력</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <form th:action="@{/auth/logout}" method="post">
+                            <button type="submit" class="btn btn-outline-secondary">로그아웃</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 기존 내용 -->
     <div class="row mb-4">
         <div class="col">
             <h2>근무 시간 입력</h2>
@@ -80,5 +107,8 @@
         </div>
     </div>
 </div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
