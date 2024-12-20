@@ -61,4 +61,16 @@ public class AdminService {
                 .map(DepartmentResponse::from)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public void deleteDepartment(Long departmentId) {
+        Department department = departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부서입니다."));
+
+        if (!department.getStudents().isEmpty()) {
+            throw new IllegalArgumentException("소속된 학생이 있는 부서는 삭제할 수 없습니다.");
+        }
+
+        departmentRepository.delete(department);
+    }
 }
