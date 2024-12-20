@@ -55,7 +55,7 @@ public class AuthController {
         try {
             StudentResponse response = authService.login(request);
             session.setAttribute("student", response);
-            return "redirect:/work-records"; // 로그인 후 근무기록 페이지로 이동
+            return "redirect:/student/dashboard"; // 로그인 후 근무기록 페이지로 이동
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/auth/login";

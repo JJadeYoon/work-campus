@@ -66,7 +66,10 @@
                     <td>
                         <form th:action="@{/admin/approve-work}" method="post" style="display: inline;">
                             <input type="hidden" name="recordId" th:value="${record.id}">
-                            <button type="submit" class="btn btn-sm btn-success">승인</button>
+                            <button type="submit" class="btn btn-success btn-sm"
+                                    onclick="return confirm('이 근무 기록을 승인하시겠습니까?');">
+                                승인
+                            </button>
                         </form>
                     </td>
                 </tr>
